@@ -9,7 +9,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ProductStatusCard from '../components/ProductStatusCard';
@@ -33,11 +33,24 @@ function Dashboard() {
     expiration_date: '',
     stock: '',
   });
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const {
     products,
     loading: loadingProducts,
     error: errorProducts,
   } = useProducts(selectedStatus, limit);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -242,12 +255,22 @@ function Dashboard() {
                 size={20}
               />
               <input
+                ref={searchInputRef}
                 type="text"
-                placeholder="Pesquisar por descrição..."
+                placeholder="Pesquisar por descrição... (Ctrl+K)"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                  aria-label="Limpar pesquisa"
+                >
+                  <X size={20} />
+                </button>
+              )}
             </div>
           </div>
 
