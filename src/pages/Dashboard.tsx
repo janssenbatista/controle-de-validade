@@ -9,10 +9,11 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { useState, type FormEvent, useMemo } from 'react';
+import { useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ProductStatusCard from '../components/ProductStatusCard';
+import ProductsTable from '../components/ProductsTable';
 import { useAuth } from '../contexts/AuthContext';
 import { useProductStats, type ProductStats } from '../hooks/useProductStats';
 import { useProducts } from '../hooks/useProducts';
@@ -122,7 +123,7 @@ function Dashboard() {
     }
   };
 
-  const filteredProducts = useMemo(() => {
+  const filteredProducts = (() => {
     if (!searchTerm.trim()) {
       return products;
     }
@@ -130,7 +131,7 @@ function Dashboard() {
     return products.filter((product) =>
       product.description.toLowerCase().includes(lowerSearch)
     );
-  }, [products, searchTerm]);
+  })();
 
   const handleDeleteSelected = () => {
     if (selectedProducts.length === 0) return;
@@ -298,92 +299,14 @@ function Dashboard() {
             </div>
           </div>
 
-          {loadingProducts ? (
-            <p className="text-gray-600 animate-pulse">
-              Carregando produtos...
-            </p>
-          ) : errorProducts ? (
-            <p className="text-red-600">
-              Erro ao carregar produtos: {errorProducts.message}
-            </p>
-          ) : filteredProducts.length === 0 ? (
-            <p className="text-gray-600">Nenhum produto encontrado.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left">
-                      <input
-                        type="checkbox"
-                        checked={
-                          filteredProducts.length > 0 &&
-                          selectedProducts.length === filteredProducts.length
-                        }
-                        onChange={handleSelectAll}
-                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
-                      />
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Descrição
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Data de Validade
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estoque
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredProducts.map((product) => (
-                    <tr
-                      key={product.id}
-                      className="hover:bg-gray-50 transition-colors duration-150"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <input
-                          type="checkbox"
-                          checked={selectedProducts.includes(product.id)}
-                          onChange={() => handleSelectProduct(product.id)}
-                          className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {product.description}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(product.expiration_date).toLocaleDateString(
-                          'pt-BR'
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {product.stock}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            product.status === 'Vencido'
-                              ? 'bg-red-100 text-red-800'
-                              : product.status === 'Crítico'
-                                ? 'bg-orange-100 text-orange-800'
-                                : product.status === 'Atenção'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-green-100 text-green-800'
-                          }`}
-                        >
-                          {product.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <ProductsTable
+            products={filteredProducts}
+            selectedProducts={selectedProducts}
+            isLoading={loadingProducts}
+            error={errorProducts}
+            onSelectProduct={handleSelectProduct}
+            onSelectAll={handleSelectAll}
+          />
         </div>
       </main>
 
