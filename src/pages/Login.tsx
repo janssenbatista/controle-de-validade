@@ -30,6 +30,12 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <img
+          src="logo-iguavet-small.png"
+          alt="Logo da Iguavet"
+          width={150}
+          className="mb-3.5 m-auto"
+        />
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Controle de Validade
