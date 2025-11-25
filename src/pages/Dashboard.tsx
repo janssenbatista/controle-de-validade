@@ -173,9 +173,16 @@ function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Controle de Validade
-          </h1>
+          <div className="flex items-center gap-4">
+            <img
+              src="logo-iguavet-small.png"
+              alt="Logo da Iguavet"
+              width={50}
+            />
+            <h1 className="text-2xl font-bold text-gray-900">
+              Controle de Validade
+            </h1>
+          </div>
           <div className="flex items-center gap-4">
             <span className="text-gray-600">{user?.email}</span>
             <button
