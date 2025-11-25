@@ -205,6 +205,7 @@ function Dashboard() {
               stats={getStat('Vencido')}
               quantity={getStat('Vencido').total_produtos}
               icon={CalendarOff}
+              isSelected={selectedStatus === 'Vencido'}
               onClick={() => setSelectedStatus('Vencido')}
             />
             <ProductStatusCard
@@ -212,6 +213,7 @@ function Dashboard() {
               stats={getStat('Crítico')}
               quantity={getStat('Crítico').total_produtos}
               icon={AlertTriangle}
+              isSelected={selectedStatus === 'Crítico'}
               onClick={() => setSelectedStatus('Crítico')}
             />
             <ProductStatusCard
@@ -219,6 +221,7 @@ function Dashboard() {
               stats={getStat('Atenção')}
               quantity={getStat('Atenção').total_produtos}
               icon={ClockAlert}
+              isSelected={selectedStatus === 'Atenção'}
               onClick={() => setSelectedStatus('Atenção')}
             />
             <ProductStatusCard
@@ -226,6 +229,7 @@ function Dashboard() {
               stats={getStat('Válido')}
               quantity={getStat('Válido').total_produtos}
               icon={ClockCheck}
+              isSelected={selectedStatus === 'Válido'}
               onClick={() => setSelectedStatus('Válido')}
             />
           </div>
