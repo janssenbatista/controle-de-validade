@@ -169,6 +169,15 @@ function Dashboard() {
     );
   };
 
+  const getTotalProducts = (): number => {
+    if (selectedStatus) {
+      return getStat(
+        selectedStatus as 'Vencido' | 'Crítico' | 'Atenção' | 'Válido'
+      ).total_produtos;
+    }
+    return stats.reduce((acc, stat) => acc + stat.total_produtos, 0);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
@@ -287,8 +296,9 @@ function Dashboard() {
 
           <div className="flex justify-between items-center mb-6">
             <div className="text-sm text-gray-600">
-              Mostrando {filteredProducts.length} de {products.length}{' '}
+              Mostrando {filteredProducts.length} de {getTotalProducts()}{' '}
               produto(s)
+              {selectedStatus && ` (${selectedStatus})`}
             </div>
             <div className="flex items-center gap-4">
               {selectedProducts.length > 0 && (
