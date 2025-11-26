@@ -1,4 +1,4 @@
-import { Edit } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import type { Product } from '../hooks/useProducts';
 
 interface ProductsTableProps {
@@ -9,6 +9,7 @@ interface ProductsTableProps {
   onSelectProduct: (productId: string) => void;
   onSelectAll: () => void;
   onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
 }
 
 function TableSkeleton() {
@@ -34,6 +35,9 @@ function TableSkeleton() {
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Editar
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Excluir
             </th>
           </tr>
         </thead>
@@ -71,6 +75,7 @@ export default function ProductsTable({
   onSelectProduct,
   onSelectAll,
   onEdit,
+  onDelete,
 }: ProductsTableProps) {
   if (isLoading) {
     return <TableSkeleton />;
@@ -117,6 +122,9 @@ export default function ProductsTable({
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Editar
             </th>
+            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Excluir
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -162,6 +170,13 @@ export default function ProductsTable({
                   className="inline-block"
                   size={18}
                   onClick={() => onEdit(product)}
+                />
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center text-red-600 cursor-pointer hover:text-red-700 transition">
+                <Trash2
+                  className="inline-block"
+                  size={18}
+                  onClick={() => onDelete(product)}
                 />
               </td>
             </tr>
