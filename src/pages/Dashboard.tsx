@@ -29,6 +29,7 @@ function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [formData, setFormData] = useState({
+    id: '',
     description: '',
     expiration_date: '',
     stock: '',
@@ -81,11 +82,45 @@ function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['product-stats'] });
       setIsModalOpen(false);
-      setFormData({ description: '', expiration_date: '', stock: '' });
+      setFormData({ id: '', description: '', expiration_date: '', stock: '' });
     },
     onError: (error) => {
       console.error('Erro ao adicionar produto:', error);
       alert('Erro ao adicionar produto. Tente novamente.');
+    },
+  });
+
+  const updateProductMutation = useMutation({
+    mutationFn: async (productData: {
+      id: string;
+      description: string;
+      expiration_date: string;
+      stock: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('tb_products')
+        .update({
+          description: productData.description,
+          expiration_date: productData.expiration_date,
+          stock: parseInt(productData.stock),
+        })
+        .eq('id', productData.id)
+        .select();
+
+      if (error) throw error;
+
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log('Produto atualizado com sucesso:', data);
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['product-stats'] });
+      setIsModalOpen(false);
+      setFormData({ id: '', description: '', expiration_date: '', stock: '' });
+    },
+    onError: (error) => {
+      console.error('Erro ao atualizar o produto:', error);
+      alert('Erro ao atualizar o produto. Tente novamente.');
     },
   });
 
@@ -112,7 +147,12 @@ function Dashboard() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    addProductMutation.mutate(formData);
+
+    if (formData.id) {
+      updateProductMutation.mutate(formData);
+    } else {
+      addProductMutation.mutate(formData);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -350,6 +390,15 @@ function Dashboard() {
             error={errorProducts}
             onSelectProduct={handleSelectProduct}
             onSelectAll={handleSelectAll}
+            onEdit={(product) => {
+              setFormData({
+                id: product.id,
+                description: product.description,
+                expiration_date: product.expiration_date,
+                stock: product.stock.toString(),
+              });
+              setIsModalOpen(true);
+            }}
           />
         </div>
       </main>
@@ -375,7 +424,7 @@ function Dashboard() {
               <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-900">
-                    Adicionar Produto
+                    {formData.id ? 'Atualizar Produto' : 'Adicionar Produto'}
                   </h2>
                   <button
                     onClick={() => setIsModalOpen(false)}
@@ -452,15 +501,27 @@ function Dashboard() {
                     >
                       Cancelar
                     </button>
-                    <button
-                      type="submit"
-                      disabled={addProductMutation.isPending}
-                      className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {addProductMutation.isPending
-                        ? 'Adicionando...'
-                        : 'Adicionar'}
-                    </button>
+                    {formData.id ? (
+                      <button
+                        type="submit"
+                        disabled={addProductMutation.isPending}
+                        className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {updateProductMutation.isPending
+                          ? 'Atualizando...'
+                          : 'Atualizar'}
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        disabled={addProductMutation.isPending}
+                        className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {addProductMutation.isPending
+                          ? 'Adicionando...'
+                          : 'Adicionar'}
+                      </button>
+                    )}
                   </div>
                 </form>
               </div>

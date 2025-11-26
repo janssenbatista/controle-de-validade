@@ -1,3 +1,4 @@
+import { Edit } from 'lucide-react';
 import type { Product } from '../hooks/useProducts';
 
 interface ProductsTableProps {
@@ -7,6 +8,7 @@ interface ProductsTableProps {
   error: Error | null;
   onSelectProduct: (productId: string) => void;
   onSelectAll: () => void;
+  onEdit: (product: Product) => void;
 }
 
 function TableSkeleton() {
@@ -29,6 +31,9 @@ function TableSkeleton() {
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Editar
             </th>
           </tr>
         </thead>
@@ -65,6 +70,7 @@ export default function ProductsTable({
   error,
   onSelectProduct,
   onSelectAll,
+  onEdit,
 }: ProductsTableProps) {
   if (isLoading) {
     return <TableSkeleton />;
@@ -108,6 +114,9 @@ export default function ProductsTable({
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
+            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Editar
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -147,6 +156,13 @@ export default function ProductsTable({
                 >
                   {product.status}
                 </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600 cursor-pointer hover:text-yellow-700 transition">
+                <Edit
+                  className="inline-block"
+                  size={18}
+                  onClick={() => onEdit(product)}
+                />
               </td>
             </tr>
           ))}
