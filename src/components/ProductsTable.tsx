@@ -1,4 +1,4 @@
-import { Edit, Trash2 } from 'lucide-react';
+import { Copy, Edit, Trash2 } from 'lucide-react';
 import type { Product } from '../hooks/useProducts';
 
 interface ProductsTableProps {
@@ -10,6 +10,7 @@ interface ProductsTableProps {
   onSelectAll: () => void;
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
+  onCopy: (product: Product) => void;
 }
 
 function TableSkeleton() {
@@ -38,6 +39,9 @@ function TableSkeleton() {
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Excluir
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Copiar
             </th>
           </tr>
         </thead>
@@ -76,6 +80,7 @@ export default function ProductsTable({
   onSelectAll,
   onEdit,
   onDelete,
+  onCopy,
 }: ProductsTableProps) {
   if (isLoading) {
     return <TableSkeleton />;
@@ -124,6 +129,9 @@ export default function ProductsTable({
             </th>
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Excluir
+            </th>
+            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Copiar
             </th>
           </tr>
         </thead>
@@ -177,6 +185,13 @@ export default function ProductsTable({
                   className="inline-block"
                   size={18}
                   onClick={() => onDelete(product)}
+                />
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center text-gray-600 cursor-pointer hover:text-gray-700 transition">
+                <Copy
+                  className="inline-block"
+                  size={18}
+                  onClick={() => onCopy(product)}
                 />
               </td>
             </tr>

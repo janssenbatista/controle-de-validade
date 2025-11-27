@@ -176,6 +176,10 @@ function Dashboard() {
     }
   };
 
+  const resetFormData = () => {
+    setFormData({ id: '', description: '', expiration_date: '', stock: '' });
+  };
+
   const filteredProducts = (() => {
     if (!searchTerm.trim()) {
       return products;
@@ -410,6 +414,15 @@ function Dashboard() {
               setIsModalOpen(true);
             }}
             onDelete={handleDeleteProduct}
+            onCopy={(product) => {
+              setFormData((prev) => ({
+                ...prev,
+                description: product.description,
+                expiration_date: product.expiration_date,
+                stock: product.stock.toString(),
+              }));
+              setIsModalOpen(true);
+            }}
           />
         </div>
       </main>
