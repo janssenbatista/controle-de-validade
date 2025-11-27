@@ -451,7 +451,10 @@ function Dashboard() {
                     {formData.id ? 'Atualizar Produto' : 'Adicionar Produto'}
                   </h2>
                   <button
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      resetFormData();
+                    }}
                     className="text-gray-500 hover:text-gray-700 transition-all duration-200 hover:rotate-90"
                   >
                     <X size={24} />
