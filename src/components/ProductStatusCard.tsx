@@ -4,6 +4,8 @@ import type { ProductStats } from '../hooks/useProductStats';
 function getColorByStatus(ProductStats: ProductStats): string {
   switch (ProductStats.status) {
     case 'Vencido':
+      return 'bg-red-700';
+    case 'Muito Crítico':
       return 'bg-red-500';
     case 'Crítico':
       return 'bg-orange-500';

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 
 export interface ProductStats {
-  status: 'Vencido' | 'Crítico' | 'Atenção' | 'Válido';
+  status: 'Vencido' | 'Muito Crítico' | 'Crítico' | 'Atenção' | 'Válido';
   total_produtos: number;
 }
 

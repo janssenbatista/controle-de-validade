@@ -213,7 +213,7 @@ function Dashboard() {
   };
 
   const getStat = (
-    status: 'Vencido' | 'Crítico' | 'Atenção' | 'Válido'
+    status: 'Vencido' | 'Muito Crítico' | 'Crítico' | 'Atenção' | 'Válido'
   ): ProductStats => {
     return (
       stats.find((s) => s.status === status) || {
@@ -226,7 +226,12 @@ function Dashboard() {
   const getTotalProducts = (): number => {
     if (selectedStatus) {
       return getStat(
-        selectedStatus as 'Vencido' | 'Crítico' | 'Atenção' | 'Válido'
+        selectedStatus as
+          | 'Vencido'
+          | 'Muito Crítico'
+          | 'Crítico'
+          | 'Atenção'
+          | 'Válido'
       ).total_produtos;
     }
     return stats.reduce((acc, stat) => acc + stat.total_produtos, 0);
@@ -269,7 +274,7 @@ function Dashboard() {
             <p className="text-red-600">{`Erro ao carregar dados: ${error.message}`}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-8 lg:grid-cols-12 gap-4 justify-around">
+          <div className="grid grid-cols-2 md:grid-cols-12 lg:grid-cols-15 gap-4 justify-around">
             <ProductStatusCard
               title="Produtos Vencidos"
               stats={getStat('Vencido')}
@@ -279,7 +284,15 @@ function Dashboard() {
               onClick={() => setSelectedStatus('Vencido')}
             />
             <ProductStatusCard
-              title="Critico (7 dias)"
+              title="Muito Critico (30 dias)"
+              stats={getStat('Muito Crítico')}
+              quantity={getStat('Muito Crítico').total_produtos}
+              icon={AlertTriangle}
+              isSelected={selectedStatus === 'Muito Crítico'}
+              onClick={() => setSelectedStatus('Muito Crítico')}
+            />
+            <ProductStatusCard
+              title="Critico (60 dias)"
               stats={getStat('Crítico')}
               quantity={getStat('Crítico').total_produtos}
               icon={AlertTriangle}
@@ -287,7 +300,7 @@ function Dashboard() {
               onClick={() => setSelectedStatus('Crítico')}
             />
             <ProductStatusCard
-              title="Atenção (30 dias)"
+              title="Atenção (120 dias)"
               stats={getStat('Atenção')}
               quantity={getStat('Atenção').total_produtos}
               icon={ClockAlert}

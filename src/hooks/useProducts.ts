@@ -6,7 +6,7 @@ export interface Product {
   description: string;
   expiration_date: string;
   stock: number;
-  status: 'Vencido' | 'Crítico' | 'Atenção' | 'Válido';
+  status: 'Vencido' | 'Muito Crítico' | 'Crítico' | 'Atenção' | 'Válido';
 }
 
 async function fetchProducts(
