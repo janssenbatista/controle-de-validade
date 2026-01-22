@@ -153,7 +153,9 @@ export default function ProductsTable({
                 {product.description}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {new Date(product.expiration_date).toLocaleDateString('pt-BR')}
+                {new Date(product.expiration_date).toLocaleDateString('pt-BR', {
+                  timeZone: 'UTC',
+                })}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {product.stock}
